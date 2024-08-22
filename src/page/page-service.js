@@ -18,7 +18,6 @@ class PageService {
 			watermark: data.watermark
 		})
 
-
 		return page
 	}
 

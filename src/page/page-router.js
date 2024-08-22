@@ -13,4 +13,6 @@ pageRouter.post('/create', ml.fields([
 ]), pageController.create)
 
 
+pageRouter.post('/add-buttons', pageController.addButtons)
+
 export default pageRouter
