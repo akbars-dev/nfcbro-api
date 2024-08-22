@@ -1,4 +1,4 @@
-import { DataTypes, sequelize } from '../database'
+import { DataTypes, sequelize } from '../utils/database.js'
 
 /**TODO: 
  * PAGES MODEL

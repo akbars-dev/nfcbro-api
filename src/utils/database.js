@@ -1,8 +1,8 @@
-import { Sequelize } from 'sequelize'
+import { DataTypes, Sequelize } from 'sequelize'
 
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
-	storage: 'database.sqlite'
+	storage: 'database.db'
 })
 
 
@@ -17,3 +17,4 @@ async function connectDB() {
 
 
 export { connectDB, DataTypes, sequelize, Sequelize }
+

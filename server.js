@@ -1,6 +1,6 @@
 import express from 'express'
-import { connectDB } from './src/database.js'
 import router from './src/index.js'
+import { connectDB, sequelize } from './src/utils/database.js'
 
 
 const app = express()
@@ -8,6 +8,7 @@ const app = express()
 
 async function main() {
 	app.use(express.json())
+	app.use(express.urlencoded({ extended: true }))
 
 	app.use('/api', router)
 
