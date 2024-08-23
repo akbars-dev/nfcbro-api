@@ -13,6 +13,10 @@ pageRouter.post('/create', ml.fields([
 ]), pageController.create)
 
 
+pageRouter.get('/all-buttons', pageController.allButtons)
+pageRouter.get('/get-button/:id', pageController.getButton)
 pageRouter.post('/add-buttons', pageController.addButtons)
+pageRouter.put('/update-button/:id', pageController.updateButton)
+pageRouter.delete('/delete-button/:id', pageController.deleteButton)
 
 export default pageRouter
