@@ -1,13 +1,14 @@
 import multer from 'multer'
 import path from 'node:path'
+import { v4 } from 'uuid'
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'public/')
 	},
 
-	filename: function (req, file, cb) {
-		cb(null, Date.now() + path.extname(file.originalname))
+	filename: async function (req, file, cb) {
+		cb(null, await v4() + path.extname(file.originalname))
 	}
 })
 

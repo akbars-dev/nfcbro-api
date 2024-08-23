@@ -1,3 +1,4 @@
+import ApiError from '../errors/api-error.js'
 import { ButtonModel } from './page-models.js'
 
 class ButtonService {
@@ -13,11 +14,15 @@ class ButtonService {
 
 	async updateButton(buttonId, data) {
 		const updatedButton = await ButtonModel.update({ ...data, updateAt: Date.now() }, { where: { id: buttonId } })
+
+		if (updatedButton[0] == 0) throw ApiError.BadRequest("Button not found")
 		return updatedButton
 	}
 
 	async deleteButton(buttonId) {
 		const deletedButton = await ButtonModel.destroy({ where: { id: buttonId }, force: true })
+		if (deletedButton[0] == 0) throw ApiError.BadRequest("Button not found")
+
 		return deletedButton
 	}
 
@@ -28,6 +33,8 @@ class ButtonService {
 
 	async getButton(buttonId) {
 		const getButton = await ButtonModel.findOne({ where: { id: buttonId } })
+		if (!getButton) throw ApiError.BadRequest("Button not found")
+
 		return getButton
 	}
 

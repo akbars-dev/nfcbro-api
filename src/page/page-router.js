@@ -12,7 +12,12 @@ pageRouter.post('/create', ml.fields([
 	{ name: 'profilePic', maxCount: 1 }
 ]), pageController.create)
 
+pageRouter.put('/update/:id', ml.fields([
+	{ name: 'backroundPic', maxCount: 1 },
+	{ name: 'profilePic', maxCount: 1 }
+]), pageController.updatePage)
 
+// buttons
 pageRouter.get('/all-buttons', pageController.allButtons)
 pageRouter.get('/get-button/:id', pageController.getButton)
 pageRouter.post('/add-buttons', pageController.addButtons)

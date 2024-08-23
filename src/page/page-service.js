@@ -1,3 +1,5 @@
+import fs from 'fs'
+
 import ApiError from '../errors/api-error.js'
 import { PageModel } from './page-models.js'
 
@@ -19,6 +21,31 @@ class PageService {
 		})
 
 		return page
+	}
+
+
+	async update(id, data, profilePic, backroundPic) {
+		const page = await PageModel.findOne({ where: { id: id } })
+
+		if (!page) throw ApiError.BadRequest("Page not found")
+
+		if (profilePic && backroundPic) {
+			await fs.unlink(`./public/${page.profilePic}`, (err) => err ? console.log(err) : null)
+			await fs.unlink(`./public/${page.backroundPic}`, (err) => err ? console.log(err) : null)
+
+			const updatedPage = await PageModel.update({ ...data, profilePic: profilePic[0].filename, backroundPic: backroundPic[0].filename }, { where: { id: id } })
+			return updatedPage
+		} else if (profilePic) {
+			await fs.unlink(`./public/${page.profilePic}`, (err) => err ? console.log(err) : null)
+
+			const updatedPage = await PageModel.update({ ...data, profilePic: profilePic[0].filename }, { where: { id: id } })
+			return updatedPage
+		} else if (backroundPic) {
+			await fs.unlink(`./public/${page.backroundPic}`, (err) => err ? console.log(err) : null)
+
+			const updatedPage = await PageModel.update({ ...data, backroundPic: backroundPic[0].filename }, { where: { id: id } })
+			return updatedPage
+		}
 	}
 
 }

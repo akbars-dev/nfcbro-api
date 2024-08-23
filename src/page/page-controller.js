@@ -28,6 +28,21 @@ class PageController {
 		}
 	}
 
+
+	async updatePage(req, res, next) {
+		try {
+			const id = req.params.id
+			const body = req.body
+			const { profilePic, backroundPic } = req.files
+
+			await pageService.update(id, body, profilePic, backroundPic)
+
+			return res.json({ status: 200, message: "Page updated", data: [] })
+		} catch (error) {
+			next(error)
+		}
+	}
+
 	// buttons
 	async addButtons(req, res, next) {
 		try {
