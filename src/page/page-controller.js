@@ -5,6 +5,27 @@ const pageService = new PageService()
 const buttonService = new ButtonService()
 
 class PageController {
+	async allPages(req, res, next) {
+		try {
+			const data = await pageService.allPages()
+			return res.json({ status: 200, message: "All pages: ", data: data })
+		} catch (error) {
+			next(error)
+		}
+	}
+
+
+	async findPage(req, res, next) {
+		try {
+			const id = req.params.id
+			const data = await pageService.findPage(id)
+
+			return res.json({ status: 200, message: "Page: ", data: data })
+		} catch (error) {
+			next(error)
+		}
+	}
+
 	async create(req, res, next) {
 		try {
 			const { name, about, username, password, watermark } = req.body
@@ -38,6 +59,17 @@ class PageController {
 			await pageService.update(id, body, profilePic, backroundPic)
 
 			return res.json({ status: 200, message: "Page updated", data: [] })
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	async deletePage(req, res, next) {
+		try {
+			const id = req.params.id
+			await pageService.delete(id)
+
+			return res.json({ status: 200, message: "Page deleted", data: [] })
 		} catch (error) {
 			next(error)
 		}

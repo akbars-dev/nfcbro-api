@@ -1,9 +1,30 @@
 import fs from 'fs'
 
 import ApiError from '../errors/api-error.js'
-import { PageModel } from './page-models.js'
+import { ButtonModel, PageModel } from './page-models.js'
 
 class PageService {
+
+	async allPages() {
+		const pages = await PageModel.findAll()
+		return pages
+	}
+
+	async findPage(id) {
+		const page = await PageModel.findOne({
+			where: { id: id },
+			include: [
+				{
+					model: ButtonModel,
+					as: 'buttons'
+				}
+			]
+		})
+
+		console.log(page)
+
+		return page
+	}
 
 	async create(data) {
 		const condidate = await PageModel.findOne({ where: { username: data.username } })
@@ -46,6 +67,19 @@ class PageService {
 			const updatedPage = await PageModel.update({ ...data, backroundPic: backroundPic[0].filename }, { where: { id: id } })
 			return updatedPage
 		}
+	}
+
+	async delete(id) {
+		const condidate = await PageModel.findOne({ where: { id: id } })
+
+		if (!condidate) throw ApiError.BadRequest("Page not found")
+
+		await fs.unlink(`./public/${condidate.backroundPic}`, (err) => err ? console.log(err) : null)
+		await fs.unlink(`./public/${condidate.backroundPic}`, (err) => err ? console.log(err) : null)
+
+		const deletedPage = await PageModel.destroy({ where: { id: id } })
+
+		return deletedPage
 	}
 
 }
