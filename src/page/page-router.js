@@ -26,4 +26,8 @@ pageRouter.post('/add-buttons', pageController.addButtons)
 pageRouter.put('/update-button/:id', pageController.updateButton)
 pageRouter.delete('/delete-button/:id', pageController.deleteButton)
 
+// auth
+pageRouter.post('/login', pageController.login)
+
+
 export default pageRouter

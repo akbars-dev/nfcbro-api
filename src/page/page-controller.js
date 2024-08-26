@@ -1,10 +1,26 @@
+import AuthService from './auth-service.js'
 import ButtonService from './button-service.js'
 import PageService from './page-service.js'
 
 const pageService = new PageService()
 const buttonService = new ButtonService()
+const authService = new AuthService()
 
 class PageController {
+
+	// auth
+	async login(req, res, next) {
+		try {
+			const data = await authService.login(req.body.username, req.body.password)
+
+			return res.json({ status: 201, message: 'Akkauntga kirdingiz', data: data })
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	// pages
+
 	async allPages(req, res, next) {
 		try {
 			const data = await pageService.allPages()
