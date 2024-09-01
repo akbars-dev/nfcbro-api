@@ -48,8 +48,6 @@ class PageService {
 	async update(id, data, profilePic, backroundPic) {
 		const page = await PageModel.findOne({ where: { username: id } })
 
-		console.log(page)
-
 		if (!page) throw ApiError.BadRequest("Page not found")
 
 		if (profilePic && backroundPic) {
