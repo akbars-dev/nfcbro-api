@@ -12,7 +12,7 @@ class PageService {
 
 	async findPage(id) {
 		const page = await PageModel.findOne({
-			where: { id: id },
+			where: { username: id },
 			include: [
 				{
 					model: ButtonModel,
@@ -21,7 +21,7 @@ class PageService {
 			]
 		})
 
-		console.log(page)
+		if (!page) throw ApiError.BadRequest("Bunday sahifa mavjud emas :(")
 
 		return page
 	}
@@ -46,27 +46,35 @@ class PageService {
 
 
 	async update(id, data, profilePic, backroundPic) {
-		const page = await PageModel.findOne({ where: { id: id } })
+		const page = await PageModel.findOne({ where: { username: id } })
+
+		console.log(page)
 
 		if (!page) throw ApiError.BadRequest("Page not found")
 
 		if (profilePic && backroundPic) {
 			await fs.unlink(`./public/${page.profilePic}`, (err) => err ? console.log(err) : null)
 			await fs.unlink(`./public/${page.backroundPic}`, (err) => err ? console.log(err) : null)
+			console.log('1')
 
-			const updatedPage = await PageModel.update({ ...data, profilePic: profilePic[0].filename, backroundPic: backroundPic[0].filename }, { where: { id: id } })
+			const updatedPage = await PageModel.update({ ...data, profilePic: profilePic[0].filename, backroundPic: backroundPic[0].filename }, { where: { username: id } })
 			return updatedPage
 		} else if (profilePic) {
 			await fs.unlink(`./public/${page.profilePic}`, (err) => err ? console.log(err) : null)
+			console.log('2')
 
-			const updatedPage = await PageModel.update({ ...data, profilePic: profilePic[0].filename }, { where: { id: id } })
+			const updatedPage = await PageModel.update({ ...data, profilePic: profilePic[0].filename }, { where: { username: id } })
 			return updatedPage
 		} else if (backroundPic) {
 			await fs.unlink(`./public/${page.backroundPic}`, (err) => err ? console.log(err) : null)
+			console.log('3')
 
-			const updatedPage = await PageModel.update({ ...data, backroundPic: backroundPic[0].filename }, { where: { id: id } })
+			const updatedPage = await PageModel.update({ ...data, backroundPic: backroundPic[0].filename }, { where: { username: id } })
 			return updatedPage
 		}
+
+		const updatedPage = await PageModel.update({ ...data }, { where: { username: id } })
+		return updatedPage
 	}
 
 	async delete(id) {

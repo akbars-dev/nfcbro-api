@@ -44,7 +44,7 @@ class PageController {
 
 	async create(req, res, next) {
 		try {
-			const { name, about, username, password, watermark } = req.body
+			const { name, about, username, password, watermark, buttons } = req.body
 			const { profilePic, backroundPic } = req.files
 
 			const body = {
@@ -58,6 +58,10 @@ class PageController {
 			}
 
 			const data = await pageService.create(body)
+			const buttonsData = await buttonService.createButtons(data.id, JSON.parse(buttons))
+
+			console.log(buttonsData)
+
 
 			return res.json({ status: 201, message: "Page yaratildi", data: data })
 		} catch (error) {
@@ -72,7 +76,17 @@ class PageController {
 			const body = req.body
 			const { profilePic, backroundPic } = req.files
 
+			console.log(body)
+
+
 			await pageService.update(id, body, profilePic, backroundPic)
+
+			if (body.buttons && Array.isArray(body.buttons)) {
+				for (const button of body.buttons) {
+					const { id: buttonId, ...buttonData } = button
+					await buttonService.updateButton(buttonId, buttonData)
+				}
+			}
 
 			return res.json({ status: 200, message: "Page updated", data: [] })
 		} catch (error) {

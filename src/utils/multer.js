@@ -13,7 +13,11 @@ const storage = multer.diskStorage({
 })
 
 
-const ml = multer({ storage: storage })
+const ml = multer({
+	storage: storage, limits: {
+		fileSize: 50 * 1024 * 1024,
+	},
+})
 
 
 export default ml

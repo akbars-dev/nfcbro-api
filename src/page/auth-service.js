@@ -15,8 +15,10 @@ class AuthService {
 
 		const token = jwt.sign({ username: condidation.username, password: condidation.password, id: condidation.id }, process.env.SECRET_KEY)
 
-		return token
+		return { token, page: condidation }
 	}
+
+
 }
 
 

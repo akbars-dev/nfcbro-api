@@ -19,7 +19,6 @@ class AdminController {
 		try {
 			const { username, password } = req.body
 
-
 			const token = await adminService.login(username, password)
 
 			return res.json({ status: 200, message: "Logined", data: token })
