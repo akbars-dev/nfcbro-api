@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import ApiError from '../errors/api-error.js'
 import { AdminModel } from './admin-model.js'
 
 class AdminService {
@@ -22,7 +23,7 @@ class AdminService {
 
 		const token = jwt.sign({ admin }, process.env.SECRET_KEY)
 
-		return token
+		return { token, username: condidation.username }
 	}
 }
 

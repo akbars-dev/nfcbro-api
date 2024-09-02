@@ -84,6 +84,7 @@ class PageService {
 		await fs.unlink(`./public/${condidate.backroundPic}`, (err) => err ? console.log(err) : null)
 
 		const deletedPage = await PageModel.destroy({ where: { id: id } })
+		await ButtonModel.destroy({ where: { pageId: id } })
 
 		return deletedPage
 	}
