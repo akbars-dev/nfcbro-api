@@ -13,6 +13,12 @@ class ButtonService {
 	}
 
 	async updateButton(buttonId, data) {
+		const button = await ButtonModel.findOne({ where: { id: buttonId } })
+
+		if (!button) {
+			const newButton = await ButtonModel.create(data)
+			return newButton
+		}
 		const updatedButton = await ButtonModel.update({ ...data, updateAt: Date.now() }, { where: { id: buttonId } })
 
 		if (updatedButton[0] == 0) throw ApiError.BadRequest("Button not found")
@@ -20,11 +26,27 @@ class ButtonService {
 	}
 
 	async deleteButton(buttonId) {
-		const deletedButton = await ButtonModel.destroy({ where: { id: buttonId }, force: true })
-		if (deletedButton[0] == 0) throw ApiError.BadRequest("Button not found")
+		try {
+			const buttonToDelete = await ButtonModel.findOne({ where: { id: buttonId } })
 
-		return deletedButton
+			if (!buttonToDelete) {
+				throw ApiError.BadRequest("Button not found")
+			}
+
+			const deletedButton = await ButtonModel.destroy({ where: { id: buttonId }, force: true })
+
+			if (deletedButton === 0) {
+				throw ApiError.BadRequest("Failed to delete the button")
+			}
+
+			const remainingButtons = await ButtonModel.findAll({ where: { pageId: buttonToDelete.pageId } })
+
+			return remainingButtons
+		} catch (error) {
+			throw error
+		}
 	}
+
 
 	async allButtons() {
 		const allButtons = await ButtonModel.findAll()

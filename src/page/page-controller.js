@@ -76,15 +76,19 @@ class PageController {
 			const body = req.body
 			const { profilePic, backroundPic } = req.files
 
-			console.log(body)
 
 
-			await pageService.update(id, body, profilePic, backroundPic)
+			const pgId = await pageService.update(id, body, profilePic, backroundPic)
 
-			if (body.buttons && Array.isArray(body.buttons)) {
-				for (const button of body.buttons) {
+
+
+			if (body.buttons) {
+				for (const button of JSON.parse(body.buttons)) {
+
 					const { id: buttonId, ...buttonData } = button
-					await buttonService.updateButton(buttonId, buttonData)
+					console.log(id)
+
+					await buttonService.updateButton(buttonId || 0, { pageId: pgId, ...buttonData })
 				}
 			}
 
@@ -135,9 +139,9 @@ class PageController {
 		try {
 			const id = req.params.id
 
-			await buttonService.deleteButton(id)
+			const data = await buttonService.deleteButton(id)
 
-			return res.json({ status: 200, message: `Button deleted`, data: [] })
+			return res.json({ status: 200, message: `Button deleted`, data: data })
 		} catch (error) {
 			next(error)
 		}

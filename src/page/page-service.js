@@ -53,29 +53,29 @@ class PageService {
 		if (profilePic && backroundPic) {
 			await fs.unlink(`./public/${page.profilePic}`, (err) => err ? console.log(err) : null)
 			await fs.unlink(`./public/${page.backroundPic}`, (err) => err ? console.log(err) : null)
-			console.log('1')
 
-			const updatedPage = await PageModel.update({ ...data, profilePic: profilePic[0].filename, backroundPic: backroundPic[0].filename }, { where: { username: id } })
-			return updatedPage
+			await PageModel.update({ ...data, profilePic: profilePic[0].filename, backroundPic: backroundPic[0].filename }, { where: { username: id } })
 		} else if (profilePic) {
 			await fs.unlink(`./public/${page.profilePic}`, (err) => err ? console.log(err) : null)
-			console.log('2')
 
-			const updatedPage = await PageModel.update({ ...data, profilePic: profilePic[0].filename }, { where: { username: id } })
-			return updatedPage
+			await PageModel.update({ ...data, profilePic: profilePic[0].filename }, { where: { username: id } })
 		} else if (backroundPic) {
 			await fs.unlink(`./public/${page.backroundPic}`, (err) => err ? console.log(err) : null)
-			console.log('3')
 
-			const updatedPage = await PageModel.update({ ...data, backroundPic: backroundPic[0].filename }, { where: { username: id } })
-			return updatedPage
+			await PageModel.update({ ...data, backroundPic: backroundPic[0].filename }, { where: { username: id } })
+		} else {
+			await PageModel.update({ ...data }, { where: { username: id } })
 		}
 
-		const updatedPage = await PageModel.update({ ...data }, { where: { username: id } })
-		return updatedPage
+		const updatedPage = await PageModel.findOne({ where: { username: id } })
+		return updatedPage.id
 	}
 
+
+
 	async delete(id) {
+		console.log(id)
+
 		const condidate = await PageModel.findOne({ where: { id: id } })
 
 		if (!condidate) throw ApiError.BadRequest("Page not found")
